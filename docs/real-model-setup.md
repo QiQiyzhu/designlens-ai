@@ -49,6 +49,6 @@ DeepSeek 配置仅允许其官方 HTTPS 主机及 `/v1` 别名，禁止重定向
 
 探针保存执行 commit、实际工作树文件字节 SHA256、数据集和提示词 SHA256、实际请求次数、请求/响应摘要、状态码、请求 ID、请求模型和响应模型、耗时、服务商返回的 token 用量及逐案例输出。缓存命中/未命中 token 只在服务商返回时保留；`cost_usd=null`，因为脚本没有拿到账单，不用估算替代真实扣费。
 
-本次适配验证的 [63 项后端测试](../reports/remote-provider-tests.xml) 包括原有 44 项与 19 项远程适配/探针检查；适配检查使用 MockTransport，没有付费模型调用。原有 [48 次确定性夹具结果](../reports/evaluation.md) 继续保留 extractive 来源，不改成 DeepSeek 跑分。真实探针结果应单独保存、审核后再公开；在有实际回执前，真实 LLM 的质量、延迟和 token 结果均待验证。
+本次适配验证的 [63 项后端测试](../reports/remote-provider-tests.xml) 包括原有 44 项与 19 项远程适配/探针检查；适配检查使用 MockTransport，没有付费模型调用。原有 [48 次确定性夹具结果](../reports/evaluation.md) 继续保留 extractive 来源，不改成 DeepSeek 跑分。此次 [三次真实 DeepSeek 回执](real-model-results.md) 单独保存：两例通过开发契约，第三例过度弃答失败，合计 874 token。人工评分与独立模型质量验证仍待完成。
 
 即使三例全部通过，也只证明这三条开发夹具的格式、原文引用及预期行为检查通过。它不能证明语义理解、注入防护完整性、独立测试集泛化或真实产品价值。人工评分保持 pending，真实参与者与有效产品决策保持 0。

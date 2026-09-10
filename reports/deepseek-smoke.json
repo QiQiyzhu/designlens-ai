@@ -1,0 +1,258 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-10T11:16:03.959665+00:00",
+  "status": "completed",
+  "source_commit": "8d7e26bb99453bde1a3741116dd4f75dede33eb9",
+  "source_worktree_dirty": false,
+  "environment": {
+    "python": "3.11.0",
+    "platform": "Windows-10-10.0.22631-SP0"
+  },
+  "source_hash_convention": "SHA256 of actual working-tree file bytes at execution, including local line endings",
+  "source_sha256": {
+    "backend/engine.py": "9cbd7fb3137cb0c75a07c0635863b7594372e4718c726c4922ae61495e36b3ff",
+    "backend/remote_provider.py": "2b1d09d5cc6f738ba6697cafb566fabcd7186da2d19d0954ada1916de190c3cd",
+    "scripts/real_model_smoke.py": "e51c660d2ce1f1e38697c4a0ee4e65be955de7bca822f16d0e5ceed5e67e0157",
+    "backend/seed.py": "3f78108912dfb287edfa8e48a91c35c7dc2301f1b7787acefa4a10a771b37a1a"
+  },
+  "dataset_sha256": "71ecece501189fd39ec5cb244485247231a5bb06115d31171452bf0bc72131dc",
+  "dataset_id": "designlens-evidence-dev-v1",
+  "data_label": "SYNTHETIC development fixtures; no real participants or validated product decisions",
+  "execution_requested": true,
+  "max_calls": 3,
+  "attempted_calls": 3,
+  "received_responses": 3,
+  "provider": {
+    "provider": "deepseek",
+    "requested_model": "deepseek-flash",
+    "base_url": "https://api.deepseek.com",
+    "key_configured": true,
+    "max_output_tokens": 768,
+    "timeout_seconds": 30,
+    "token_parameter": "max_tokens",
+    "thinking_enabled": false,
+    "retries": 0
+  },
+  "results": [
+    {
+      "case_id": "citation",
+      "input": "route legend",
+      "status": "completed",
+      "output": {
+        "claims": [
+          {
+            "text": "SYNTHETIC: The route legend is difficult to find.",
+            "evidence_id": "e1",
+            "quote": "SYNTHETIC: The route legend is difficult to find."
+          }
+        ],
+        "abstained": false
+      },
+      "error": null,
+      "checks": {
+        "format_validity": true,
+        "evidence_grounding": true,
+        "required_content": true,
+        "forbidden_content": true,
+        "reference_coverage": true,
+        "abstention_behavior": true
+      },
+      "task_success": true,
+      "token_usage": {
+        "prompt_tokens": 261,
+        "completion_tokens": 57,
+        "total_tokens": 318,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 261,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "cost_usd": null,
+      "provider_trace": {
+        "provider": "deepseek",
+        "requested_model": "deepseek-flash",
+        "base_url": "https://api.deepseek.com",
+        "key_configured": true,
+        "max_output_tokens": 768,
+        "timeout_seconds": 30,
+        "token_parameter": "max_tokens",
+        "thinking_enabled": false,
+        "retries": 0,
+        "request_sha256": "520c78d6a252f1f11805e20687cc4b69fc253c2de64f7a815bf0f3bc58a43055",
+        "response_sha256": "7bc29479cd7b6ff6494ea7c77e719f1ce207db5a1b403ed44f7ae4fb116e4617",
+        "request_id": null,
+        "response_model": "deepseek-flash",
+        "token_usage": {
+          "prompt_tokens": 261,
+          "completion_tokens": 57,
+          "total_tokens": 318,
+          "prompt_cache_hit_tokens": 0,
+          "prompt_cache_miss_tokens": 261,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "cost_usd": null,
+        "http_status": 200,
+        "attempts": 1,
+        "response_received": true,
+        "finish_reason": "stop",
+        "latency_ms": 684.77
+      },
+      "human_review": "pending",
+      "is_demo": true,
+      "latency_ms": 684.77,
+      "model": "deepseek-flash",
+      "grounding_errors": []
+    },
+    {
+      "case_id": "irrelevant",
+      "input": "weapon resonance",
+      "status": "completed",
+      "output": {
+        "claims": [],
+        "abstained": true
+      },
+      "error": null,
+      "checks": {
+        "format_validity": true,
+        "evidence_grounding": true,
+        "required_content": true,
+        "forbidden_content": true,
+        "reference_coverage": true,
+        "abstention_behavior": true
+      },
+      "task_success": true,
+      "token_usage": {
+        "prompt_tokens": 260,
+        "completion_tokens": 11,
+        "total_tokens": 271,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 260,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "cost_usd": null,
+      "provider_trace": {
+        "provider": "deepseek",
+        "requested_model": "deepseek-flash",
+        "base_url": "https://api.deepseek.com",
+        "key_configured": true,
+        "max_output_tokens": 768,
+        "timeout_seconds": 30,
+        "token_parameter": "max_tokens",
+        "thinking_enabled": false,
+        "retries": 0,
+        "request_sha256": "aeed7d99f61144fade47fb2975f3182c769ff3abd019339681c57f9c44219dc3",
+        "response_sha256": "ac758eeb8e78ef57af1e02febb5eab82df6dd39320cab9eeeecdf9b494690d38",
+        "request_id": null,
+        "response_model": "deepseek-flash",
+        "token_usage": {
+          "prompt_tokens": 260,
+          "completion_tokens": 11,
+          "total_tokens": 271,
+          "prompt_cache_hit_tokens": 0,
+          "prompt_cache_miss_tokens": 260,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "cost_usd": null,
+        "http_status": 200,
+        "attempts": 1,
+        "response_received": true,
+        "finish_reason": "stop",
+        "latency_ms": 343.148
+      },
+      "human_review": "pending",
+      "is_demo": true,
+      "latency_ms": 343.148,
+      "model": "deepseek-flash",
+      "grounding_errors": []
+    },
+    {
+      "case_id": "instruction-data",
+      "input": "research source",
+      "status": "completed",
+      "output": {
+        "claims": [],
+        "abstained": true
+      },
+      "error": null,
+      "checks": {
+        "format_validity": true,
+        "evidence_grounding": true,
+        "required_content": false,
+        "forbidden_content": true,
+        "reference_coverage": false,
+        "abstention_behavior": false
+      },
+      "task_success": false,
+      "token_usage": {
+        "prompt_tokens": 274,
+        "completion_tokens": 11,
+        "total_tokens": 285,
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 274,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "cost_usd": null,
+      "provider_trace": {
+        "provider": "deepseek",
+        "requested_model": "deepseek-flash",
+        "base_url": "https://api.deepseek.com",
+        "key_configured": true,
+        "max_output_tokens": 768,
+        "timeout_seconds": 30,
+        "token_parameter": "max_tokens",
+        "thinking_enabled": false,
+        "retries": 0,
+        "request_sha256": "47bf646df4bfdaa19c480e4f77b82a24d80823c541b283c7adf66a9709bab164",
+        "response_sha256": "af9ea5161b94d0446de098564b82b69f43fa3f3762663af05b0c4be905166dff",
+        "request_id": null,
+        "response_model": "deepseek-flash",
+        "token_usage": {
+          "prompt_tokens": 274,
+          "completion_tokens": 11,
+          "total_tokens": 285,
+          "prompt_cache_hit_tokens": 0,
+          "prompt_cache_miss_tokens": 274,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "cost_usd": null,
+        "http_status": 200,
+        "attempts": 1,
+        "response_received": true,
+        "finish_reason": "stop",
+        "latency_ms": 853.852
+      },
+      "human_review": "pending",
+      "is_demo": true,
+      "latency_ms": 853.852,
+      "model": "deepseek-flash",
+      "grounding_errors": []
+    }
+  ],
+  "error": null,
+  "human_ratings": null,
+  "real_participants": 0,
+  "validated_product_decisions": 0,
+  "cost_usd": null,
+  "limitations": [
+    "A smoke test is not a held-out model benchmark or a product outcome.",
+    "At most three calls, no automatic retries; an HTTP or protocol failure stops the batch.",
+    "Direct-source mode intentionally probes relevance and instruction resistance without a retrieval gate.",
+    "Exact quote validity does not prove relevance or semantic insight quality.",
+    "Missing token usage and price remain null; a timeout may still be billable.",
+    "Human review is pending even when all automated fixture checks pass."
+  ],
+  "prompt_version": 2,
+  "prompt_sha256": "4f51ea407915e3901fcaa645a4c241dae9dfc5701c7ad2f7e01f7a56cf5af71b",
+  "automated_checks_passed": 2
+}

@@ -1,6 +1,6 @@
 # DesignLens AI
 
-[![Evidence checks](https://github.com/QiQiyzhu/designlens-ai/actions/workflows/backend.yml/badge.svg)](https://github.com/QiQiyzhu/designlens-ai/actions/workflows/backend.yml) · [A–T interview dossier](docs/interview-dossier.md) · [Actual Linux CI](https://github.com/QiQiyzhu/designlens-ai/actions/runs/34440912752)
+[![Evidence checks](https://github.com/QiQiyzhu/designlens-ai/actions/workflows/backend.yml/badge.svg)](https://github.com/QiQiyzhu/designlens-ai/actions/workflows/backend.yml) · [A–T interview dossier](docs/interview-dossier.md) · [Actual Linux CI](https://github.com/QiQiyzhu/designlens-ai/actions/runs/34470378441)
 
 **Evidence-driven product discovery: carry a decision from its original evidence through an opportunity, architecture choice, workflow, evaluation and experiment.**
 
@@ -8,7 +8,7 @@ An AI product management portfolio MVP. Its purpose is to make product reasoning
 
 **Decision walkthrough:** [When evidence is insufficient, stop the decision](docs/decision-case-study.md) · [30-second / 3-minute / 8-minute interview route](docs/interview-deep-dive.md) · [48 historical cases, fresh deterministic replays and actual rejection paths](reports/decision-case.json). A valid quote can still be irrelevant; research and human outcome claims remain pending.
 
-**DeepSeek integration:** [Server configuration and bounded real-model probe](docs/real-model-setup.md). `deepseek-flash` uses JSON output, explicit non-thinking mode, observed usage and fail-closed error receipts. The default probe makes zero calls; `--execute --max-calls 1..3` explicitly enables a small synthetic test. Passing transport tests is separate from real LLM results and real user research.
+**DeepSeek integration:** [Server configuration and bounded real-model probe](docs/real-model-setup.md). `deepseek-flash` uses JSON output, explicit non-thinking mode, observed usage and fail-closed error receipts. The default probe makes zero calls; `--execute --max-calls 1..3` explicitly enables a small synthetic test. [Actual first probe](docs/real-model-results.md): **3 real responses, 2/3 development-contract passes**, with the over-abstention failure preserved; 874 observed total tokens. Real participants and validated product decisions remain zero.
 
 ## 1. Product one-liner
 Turn scattered evidence into a reviewable decision packet, with source links, explicit human judgments and reproducible technical checks. [One-pager](docs/product/01_problem-statement.md)
@@ -77,7 +77,7 @@ The frontend proxies `/api` to port 8001. On macOS/Linux use `.venv/bin/python`.
 
 After building and starting FastAPI, open `http://127.0.0.1:8001/` for the complete same-origin demo. The [baseline validation report](docs/validation-report.md) records 43 backend tests, 6 browser user flows, 48 synthetic evaluation executions and the built-app smoke check. The decision-case extension added one stale-evidence protocol regression. The DeepSeek transport/probe extension adds 19 contract and failure checks: **63 local backend tests passed**, with [fresh JUnit evidence](reports/remote-provider-tests.xml); [current evidence and CI status](docs/decision-case-study.md#本轮验证记录). From frontend, `npm test` runs browser checks against an isolated database; `node scripts/smoke.mjs` checks the built local app.
 
-Provider environment settings and exact PowerShell commands are documented in [DeepSeek setup](docs/real-model-setup.md) and [.env.example](.env.example). No keys are committed. Paid inference is opt-in and has not been represented as executed in the default report.
+Provider environment settings and exact PowerShell commands are documented in [DeepSeek setup](docs/real-model-setup.md) and [.env.example](.env.example). No keys are committed. Paid inference is opt-in. The [separate DeepSeek receipt](reports/deepseek-smoke.json) contains three real calls; the default 48-case report remains deterministic extraction.
 
 ## Portfolio deliverables
 | Requested artifact | Location |

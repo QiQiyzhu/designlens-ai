@@ -2,7 +2,7 @@
 
 核验日期：2026-09-10。仓库：[QiQiyzhu/designlens-ai](https://github.com/QiQiyzhu/designlens-ai)。本机完整演示：http://127.0.0.1:8001/ 。本项目由 AI 辅助实现，定位是可运行的产品发现与实验设计工具。真实用户访谈尚未开始；默认执行器是确定性证据摘录，不应描述成训练过的模型或生产 SaaS。
 
-**90 秒讲法：** 我想解决产品决策中“结论找不到原始依据”的问题。DesignLens 把来源、人工审核的观察、机会、架构选择、工作流验证和实验协议串起来。用户可以明确选择 No AI，也可以比较规则、检索和模型方案。我实现了可追溯引用、版本快照、持久化人工审批和区分演示/真实数据的分析。当前实际通过 63 项后端测试、6 项浏览器流程，并执行了 48 次合成夹具检查。它证明流程约束可执行；真实需求、用户价值和模型泛化仍待研究。
+**90 秒讲法：** 我想解决产品决策中“结论找不到原始依据”的问题。DesignLens 把来源、人工审核的观察、机会、架构选择、工作流验证和实验协议串起来。用户可以明确选择 No AI，也可以比较规则、检索和模型方案。我实现了可追溯引用、版本快照、持久化人工审批和区分演示/真实数据的分析。当前实际通过 63 项后端测试、6 项浏览器流程，并执行了 48 次合成夹具检查。它证明流程约束可执行；另完成三次真实 DeepSeek 调用，其中两例满足开发契约，一例过度弃答保留为失败；真实需求、用户价值和模型泛化仍待研究。
 
 ## A. 最终系统架构
 
@@ -104,11 +104,12 @@ DesignLensAI/
 | 层级 | 实际结果 | 证据 |
 |---|---|---|
 | 后端 | 63 passed；44 原有检查 + 19 远程适配/探针检查，零付费模型请求 | [本轮 JUnit](../reports/remote-provider-tests.xml) |
-| 浏览器 | 6 passed，真实 FastAPI/SQLite | [报告](../reports/browser-tests.json) |
+| 浏览器 | 6 passed，真实 FastAPI/SQLite | [本轮报告](../reports/remote-provider-browser-tests.json) |
+| 真实 DeepSeek 小探针 | 3 次响应，2/3 任务契约通过，874 token；非 benchmark | [逐例回执](../reports/deepseek-smoke.json) |
 | 开发夹具 | 12 × 4 = 48 次实际执行 | [原始 JSON](../reports/evaluation.json) |
 | 前端 | TypeScript、lint、production build 通过 | [验证记录](validation-report.md) |
 | 依赖 | npm audit 0 项已知漏洞，当次快照 | [审计](../reports/npm-audit.json) |
-| Linux CI | backend + browser 两个 job 成功 | [Run 34440912752](https://github.com/QiQiyzhu/designlens-ai/actions/runs/34440912752) |
+| Linux CI | 适配代码提交 8d7e26b 的 backend + browser 成功 | [Run 34470378441](https://github.com/QiQiyzhu/designlens-ai/actions/runs/34470378441) |
 
 浏览器六个 case 内覆盖完整业务步骤，不是六个点击断言。流程包括引用回看、CSV 导入与错误恢复、人工审核、机会与实验门控、提示词/工作流版本、持久化审批、失败案例和 390px 布局。自动测试中的“审核人操作”不算真实用户研究。
 
@@ -121,7 +122,7 @@ DesignLensAI/
 | Retrieval + 摘录 | 12/12 | 100% / 100% | 0.089 ms |
 | Workflow | 12/12 | 100% / 100% | 0.094 ms |
 
-数值来自 [evaluation.md](../reports/evaluation.md)，数据 SHA256 为 `71ecece501189fd39ec5cb244485247231a5bb06115d31171452bf0bc72131dc`。Workflow 有 10 个待人工审批结果，这不等于已批准。全部是同一套合成开发数据上的确定性执行，human ratings 为 null。**没有独立检索 Recall@K/MRR/nDCG 实验，也没有真实 LLM 的 RAG benchmark。** 因此不能把表里的 0→100% 写成提示工程带来的模型提升。
+数值来自 [evaluation.md](../reports/evaluation.md)，数据 SHA256 为 `71ecece501189fd39ec5cb244485247231a5bb06115d31171452bf0bc72131dc`。Workflow 有 10 个待人工审批结果，这不等于已批准。全部是同一套合成开发数据上的确定性执行，human ratings 为 null。**没有独立检索 Recall@K/MRR/nDCG 实验，也没有真实 LLM 的 RAG benchmark。** 因此不能把表里的 0→100% 写成提示工程带来的模型提升。另有 [三次真实 DeepSeek 直接来源调用](real-model-results.md)，两例通过、一例过度弃答失败；它没有使用相同四变体处理链，不属于此表的 RAG benchmark。
 
 ## L. Agent Ablation 真实结果
 
@@ -137,7 +138,7 @@ DesignLensAI/
 | 25 | 75 | 122.204 ms | 370.281 ms | 391.106 ms | 0/75 |
 | 50 | 150 | 163.908 ms | 456.932 ms | 743.073 ms | 0/150 |
 
-[原始逐请求结果](../reports/performance-readonly.json) · [复现脚本](../scripts/benchmark_readonly.py)。HTTP 时间包含数据库读取、序列化和本机调度；没有单独 DB latency、LLM latency、长时间稳态或跨机器结果。P50 为中位数，P95/P99 为排序后的下界样本位点。这是 255 个短时只读请求的观测，不代表生产容量或复杂工作流吞吐。
+[原始逐请求结果](../reports/performance-readonly.json) · [复现脚本](../scripts/benchmark_readonly.py)。HTTP 时间包含数据库读取、序列化和本机调度；这组采样没有单独 DB latency、LLM latency、长时间稳态或跨机器结果。P50 为中位数，P95/P99 为排序后的下界样本位点。这是 255 个短时只读请求的观测，不代表生产容量或复杂工作流吞吐。另有三次真实 DeepSeek 观测：684.770 / 343.148 / 853.852 ms，合计输入 795、输出 79 token；样本太少，未声称生产延迟分位数，账单未知仍为 null。
 
 ## N. 失败案例
 
@@ -147,6 +148,7 @@ DesignLensAI/
 4. 已关联机会的洞察后来被驳回：确认机会和创建实验时必须重新检查，不能只验证首次创建。
 5. 缺少指标分母时原本易展示误导的 0%；改为 null 和空状态。
 6. CSV/JSON 导入失败不应丢失输入；界面保留内容及错误。
+7. 真实 DeepSeek 对 instruction-data 弃答，违反既有“保留敌意材料为引文”的覆盖契约；格式与禁止内容检查通过，整体任务失败。没有泄密观察，也不能由一次弃答证明注入防护完备。[原始结果](real-model-results.md)
 
 这些修复的验证范围见 [validation-report.md](validation-report.md)。真实用户对流程是否理解、是否愿意使用仍未知。
 
@@ -156,7 +158,7 @@ DesignLensAI/
 |---|---|
 | 真实 PM/玩家研究与需求优先级 | 按同意流程招募，保留脱敏来源与观察，人工编码 |
 | 手动 Figma 设计实践 | 根据六个页面规格自行搭建组件、约束与交互 |
-| 真实模型/检索质量 | 独立测试集、人工标注、模型版本、成本、置信区间 |
+| 真实模型/检索质量 | 已有三次真实调用；仍需独立测试集、人工标注、稳定模型版本、账单与更充分样本 |
 | 真实产品实验 | 预注册干预、指标和样本方法；结果出来后再作结论 |
 | 团队与托管能力 | auth、权限、数据库约束、迁移、备份、恢复、审计 |
 | 事务和并发完善 | 实验双写一致性、并发审批和多进程竞争测试 |
@@ -174,7 +176,7 @@ DesignLensAI/
 | [backend/evaluation.py](../backend/evaluation.py) | 什么算通过，哪些结果是 pending/skipped |
 | [backend/analytics.py](../backend/analytics.py) | 群组、顺序漏斗、空分母 |
 | [backend/seed.py](../backend/seed.py) | 为什么演示标签必须贯穿来源和派生结果 |
-| [analytics/analyze.py](../analytics/analyze.py) | CLI 参数如何选择数据库与群组并落盘 |
+| [backend/remote_provider.py](../backend/remote_provider.py) | DeepSeek 思考开关、请求边界、失败保留与真实用量 |
 
 ## Q. 5 个必须读懂的 Frontend 文件
 
@@ -234,6 +236,6 @@ DesignLensAI/
 - 实现提示词与工作流不可变版本、运行快照和持久化人工审批，通过后端约束阻止未审核或已驳回证据进入确认决策。
 - 建立并执行 63 项后端测试、6 项真实后端浏览器流程及 48 次合成开发夹具检查，保留失败、待审批与未运行结果。
 - 实现带来源 ID 的精确摘录校验、演示/真实数据群组隔离及顺序漏斗分析，完成实际 Linux CI 验证。
-- 编写可复现 HTTP 采样工具，在本地 10/25/50 线程、255 次合成数据只读请求中观测零错误并保存逐请求延迟证据。
+- 接入有输出上限、零重试与失败回执的 DeepSeek 服务端适配；执行 3 次真实合成案例调用，保存 2 例契约通过与 1 例过度弃答失败、874 token 及逐请求延迟，未将调用成功等同用户价值。
 
 不要写“提升留存”“完成真实用户研究”“模型准确率提升到 100%”“生产多租户安全”或“已完成 Figma 设计”。这些都没有当前证据支持。
