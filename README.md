@@ -6,6 +6,8 @@
 
 An AI product management portfolio MVP. Its purpose is to make product reasoning inspectable, including the decision **not to use AI**.
 
+**Decision walkthrough:** [When evidence is insufficient, stop the decision](docs/decision-case-study.md) · [30-second / 3-minute / 8-minute interview route](docs/interview-deep-dive.md) · [48 historical cases, fresh deterministic replays and actual rejection paths](reports/decision-case.json). A valid quote can still be irrelevant; research and human outcome claims remain pending.
+
 ## 1. Product one-liner
 Turn scattered evidence into a reviewable decision packet, with source links, explicit human judgments and reproducible technical checks. [One-pager](docs/product/01_problem-statement.md)
 
@@ -71,7 +73,7 @@ The frontend proxies `/api` to port 8001. On macOS/Linux use `.venv/bin/python`.
 .\.venv\Scripts\python.exe -m analytics.analyze --db data/designlens.sqlite3 --demo --output reports/analytics-demo.json
 ```
 
-After building and starting FastAPI, open `http://127.0.0.1:8001/` for the complete same-origin demo. The [validation report](docs/validation-report.md) records 43 backend tests, 6 browser user flows, 48 synthetic evaluation executions and the built-app smoke check. From frontend, `npm test` runs browser checks against an isolated database; `node scripts/smoke.mjs` checks the built local app.
+After building and starting FastAPI, open `http://127.0.0.1:8001/` for the complete same-origin demo. The [baseline validation report](docs/validation-report.md) records 43 backend tests, 6 browser user flows, 48 synthetic evaluation executions and the built-app smoke check. The decision-case extension adds one stale-evidence protocol regression: **44 local backend tests passed**; [current evidence and CI status](docs/decision-case-study.md#本轮验证记录). From frontend, `npm test` runs browser checks against an isolated database; `node scripts/smoke.mjs` checks the built local app.
 
 Provider environment settings are documented in [.env.example](.env.example). No keys are committed. Paid inference is opt-in and has not been represented as executed in the default report.
 

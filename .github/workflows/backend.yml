@@ -11,6 +11,10 @@ jobs:
       - run: python -m pip install -r backend/requirements-lock.txt
       - run: python -m pytest -q --junitxml=reports/backend-tests.xml
       - run: python -m scripts.evaluate --output reports/ci-evaluation.json
+      - name: Reproduce insufficient-evidence decision boundaries
+        run: python -m scripts.decision_case --output reports/decision-case-ci.json
+        env:
+          DESIGNLENS_PROVIDER: extractive
       - uses: actions/upload-artifact@v4
         with:
           name: backend-evidence
