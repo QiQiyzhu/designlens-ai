@@ -8,6 +8,8 @@ An AI product management portfolio MVP. Its purpose is to make product reasoning
 
 **Decision walkthrough:** [When evidence is insufficient, stop the decision](docs/decision-case-study.md) · [30-second / 3-minute / 8-minute interview route](docs/interview-deep-dive.md) · [48 historical cases, fresh deterministic replays and actual rejection paths](reports/decision-case.json). A valid quote can still be irrelevant; research and human outcome claims remain pending.
 
+**DeepSeek integration:** [Server configuration and bounded real-model probe](docs/real-model-setup.md). `deepseek-flash` uses JSON output, explicit non-thinking mode, observed usage and fail-closed error receipts. The default probe makes zero calls; `--execute --max-calls 1..3` explicitly enables a small synthetic test. Passing transport tests is separate from real LLM results and real user research.
+
 ## 1. Product one-liner
 Turn scattered evidence into a reviewable decision packet, with source links, explicit human judgments and reproducible technical checks. [One-pager](docs/product/01_problem-statement.md)
 
@@ -31,7 +33,7 @@ Business goal → observed problem → opportunity → solution → experiment. 
 The canvas compares No AI, Rules, Search, Traditional ML, LLM, RAG, Agent and Multimodal. It can recommend a label change or rules. Accuracy, latency and costs are unmeasured until actually benchmarked. The proposed game build advisor is **not selected or implemented**; that choice must follow player research. [Feasibility](docs/product/07-ai-feasibility.md)
 
 ## 7. Workflow
-Input → local retrieval → condition → prompt → extractive/model provider → human approval → schema/provenance validation. Prompt and workflow versions are immutable; diffs and rollback are real. Runs persist input/output, versions, retrieved context, tool calls, elapsed time and errors. Default execution uses deterministic extraction, **not a mocked LLM response presented as inference**. Optional OpenAI-compatible credentials enable real calls; token usage is only recorded when returned. Arbitrary MCP and autonomous Agent execution are intentionally unavailable. [API](docs/api-contract.md) · [Architecture and boundaries](docs/architecture.md)
+Input → local retrieval → condition → prompt → extractive/model provider → human approval → schema/provenance validation. Prompt and workflow versions are immutable; diffs and rollback are real. Runs persist input/output, versions, retrieved context, tool calls, elapsed time and errors. Default execution uses deterministic extraction, **not a mocked LLM response presented as inference**. The DeepSeek provider enables real calls through a server-only key; usage is recorded only when returned, and failed requests never fall back silently to the extractor. Arbitrary MCP and autonomous Agent execution are intentionally unavailable. [API](docs/api-contract.md) · [Architecture and boundaries](docs/architecture.md)
 
 ## 8. Evaluation results
 [Executed evaluation report](reports/evaluation.md) compares the plain-text contract baseline, structured extract contract, retrieval and workflow on 12 synthetic development cases. Each case executes; failed cases remain in the report. These are fixture-level checks of format, provenance and required behavior, **not evidence of model intelligence, real user benefit or held-out generalization**. Human ratings start null; Agent is skipped with a reason. [Dataset](evals/evidence-cases.json)
@@ -73,9 +75,9 @@ The frontend proxies `/api` to port 8001. On macOS/Linux use `.venv/bin/python`.
 .\.venv\Scripts\python.exe -m analytics.analyze --db data/designlens.sqlite3 --demo --output reports/analytics-demo.json
 ```
 
-After building and starting FastAPI, open `http://127.0.0.1:8001/` for the complete same-origin demo. The [baseline validation report](docs/validation-report.md) records 43 backend tests, 6 browser user flows, 48 synthetic evaluation executions and the built-app smoke check. The decision-case extension adds one stale-evidence protocol regression: **44 local backend tests passed**; [current evidence and CI status](docs/decision-case-study.md#本轮验证记录). From frontend, `npm test` runs browser checks against an isolated database; `node scripts/smoke.mjs` checks the built local app.
+After building and starting FastAPI, open `http://127.0.0.1:8001/` for the complete same-origin demo. The [baseline validation report](docs/validation-report.md) records 43 backend tests, 6 browser user flows, 48 synthetic evaluation executions and the built-app smoke check. The decision-case extension added one stale-evidence protocol regression. The DeepSeek transport/probe extension adds 19 contract and failure checks: **63 local backend tests passed**, with [fresh JUnit evidence](reports/remote-provider-tests.xml); [current evidence and CI status](docs/decision-case-study.md#本轮验证记录). From frontend, `npm test` runs browser checks against an isolated database; `node scripts/smoke.mjs` checks the built local app.
 
-Provider environment settings are documented in [.env.example](.env.example). No keys are committed. Paid inference is opt-in and has not been represented as executed in the default report.
+Provider environment settings and exact PowerShell commands are documented in [DeepSeek setup](docs/real-model-setup.md) and [.env.example](.env.example). No keys are committed. Paid inference is opt-in and has not been represented as executed in the default report.
 
 ## Portfolio deliverables
 | Requested artifact | Location |
