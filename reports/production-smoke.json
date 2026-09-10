@@ -1,0 +1,11 @@
+{
+  "url": "http://127.0.0.1:8001/",
+  "checked_at": "2026-09-10T05:19:11.777Z",
+  "mode": "Built Vite assets served by FastAPI; read-only production smoke",
+  "source_count": 6,
+  "workflow_nodes": 7,
+  "research_status": "PENDING REAL USER RESEARCH",
+  "provider": "extractive",
+  "page_errors": [],
+  "failed_assets": []
+}

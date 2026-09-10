@@ -1,0 +1,13 @@
+{
+  "sources": [
+    {
+      "source_id": "external-demo-001",
+      "type": "User Feedback",
+      "participant": "DEMO fixture, not a participant",
+      "timestamp": "2026-09-10T00:00:00+00:00",
+      "segment": "Synthetic onboarding scenario",
+      "content": "SYNTHETIC: A route legend may need a clearer resource label. This is not real player research.",
+      "metadata": {"is_synthetic_example": true, "session_id": null}
+    }
+  ]
+}

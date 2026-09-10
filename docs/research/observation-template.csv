@@ -1,0 +1,1 @@
+participant_id,session_id,game_version,seed,segment,task_id,task_prompt,started_at_utc,ended_at_utc,outcome,moderator_help,observed_action,verbatim_quote,interpretation,evidence_source_id,consent_to_quote,technical_issue

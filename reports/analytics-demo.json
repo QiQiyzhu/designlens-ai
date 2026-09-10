@@ -1,0 +1,193 @@
+{
+  "data_label": "DEMO/SYNTHETIC activity — not real user behavior",
+  "is_demo": true,
+  "generated_at": "2026-09-10T05:03:32.965573+00:00",
+  "timezone": "UTC",
+  "dau": 1,
+  "wau": 1,
+  "weekly_validated_decisions": 0,
+  "validated_decisions_status": "PENDING REAL USER RESEARCH; completed study + human outcome review required",
+  "funnel": [
+    {
+      "event": "project_created",
+      "projects": 1
+    },
+    {
+      "event": "source_uploaded",
+      "projects": 1
+    },
+    {
+      "event": "insight_accepted",
+      "projects": 0
+    },
+    {
+      "event": "opportunity_created",
+      "projects": 0
+    },
+    {
+      "event": "experiment_created",
+      "projects": 0
+    }
+  ],
+  "funnel_unit": "ordered distinct projects; all-time selected cohort",
+  "activation": {
+    "rate": null,
+    "numerator": 0,
+    "denominator": 0,
+    "window": "7 days; only matured projects"
+  },
+  "insight_acceptance": {
+    "rate": null,
+    "accepted": 0,
+    "rejected": 0
+  },
+  "evidence_coverage": {
+    "rate": null,
+    "covered": 0,
+    "accepted": 0,
+    "limitation": "Referential integrity, not semantic truth"
+  },
+  "opportunity_conversion": {
+    "rate": null,
+    "confirmed_opportunities": 0,
+    "protocols": 0
+  },
+  "workflow_success": {
+    "rate": null,
+    "successful": 0,
+    "terminal": 0,
+    "pending_approval": 0
+  },
+  "latency_ms": {
+    "p50": null,
+    "p95": null,
+    "n": 0
+  },
+  "feature_adoption": [
+    {
+      "feature": "source_uploaded",
+      "projects": 1,
+      "rate": 1.0
+    },
+    {
+      "feature": "workflow_run",
+      "projects": 0,
+      "rate": 0.0
+    },
+    {
+      "feature": "evaluation_run",
+      "projects": 0,
+      "rate": 0.0
+    },
+    {
+      "feature": "experiment_created",
+      "projects": 0,
+      "rate": 0.0
+    }
+  ],
+  "week4_retention": null,
+  "retention_status": "Not measured; no matured real activation cohort",
+  "event_count": 10,
+  "recent_events": [
+    {
+      "id": "evt_0a5608fd4c9e",
+      "user_id": "local-owner",
+      "project_id": "arc-study",
+      "name": "workflow_created",
+      "entity_id": "evidence-workflow",
+      "timestamp": "2026-09-10T04:52:50.115287+00:00",
+      "is_demo": 1,
+      "properties": {}
+    },
+    {
+      "id": "evt_46c680dc3b35",
+      "user_id": "local-owner",
+      "project_id": "arc-study",
+      "name": "insight_generated",
+      "entity_id": "insight-demo-route",
+      "timestamp": "2026-09-10T04:52:50.080792+00:00",
+      "is_demo": 1,
+      "properties": {}
+    },
+    {
+      "id": "evt_33fbd7615862",
+      "user_id": "local-owner",
+      "project_id": "arc-study",
+      "name": "insight_generated",
+      "entity_id": "insight-demo-onboarding",
+      "timestamp": "2026-09-10T04:52:50.056913+00:00",
+      "is_demo": 1,
+      "properties": {}
+    },
+    {
+      "id": "evt_a3aedf55d449",
+      "user_id": "local-owner",
+      "project_id": "arc-study",
+      "name": "source_uploaded",
+      "entity_id": "demo-scope",
+      "timestamp": "2026-09-10T04:52:50.032973+00:00",
+      "is_demo": 1,
+      "properties": {}
+    },
+    {
+      "id": "evt_126a2af4c72b",
+      "user_id": "local-owner",
+      "project_id": "arc-study",
+      "name": "source_uploaded",
+      "entity_id": "demo-review",
+      "timestamp": "2026-09-10T04:52:50.006637+00:00",
+      "is_demo": 1,
+      "properties": {}
+    },
+    {
+      "id": "evt_3e1aaa2383fa",
+      "user_id": "local-owner",
+      "project_id": "arc-study",
+      "name": "source_uploaded",
+      "entity_id": "demo-counterexample",
+      "timestamp": "2026-09-10T04:52:49.983879+00:00",
+      "is_demo": 1,
+      "properties": {}
+    },
+    {
+      "id": "evt_cb22ee0bc9ac",
+      "user_id": "local-owner",
+      "project_id": "arc-study",
+      "name": "source_uploaded",
+      "entity_id": "demo-weapons",
+      "timestamp": "2026-09-10T04:52:49.962945+00:00",
+      "is_demo": 1,
+      "properties": {}
+    },
+    {
+      "id": "evt_b2a13e338f85",
+      "user_id": "local-owner",
+      "project_id": "arc-study",
+      "name": "source_uploaded",
+      "entity_id": "demo-route",
+      "timestamp": "2026-09-10T04:52:49.938823+00:00",
+      "is_demo": 1,
+      "properties": {}
+    },
+    {
+      "id": "evt_9cf61e70502e",
+      "user_id": "local-owner",
+      "project_id": "arc-study",
+      "name": "source_uploaded",
+      "entity_id": "demo-onboarding",
+      "timestamp": "2026-09-10T04:52:49.915501+00:00",
+      "is_demo": 1,
+      "properties": {}
+    },
+    {
+      "id": "evt_963bd7b03007",
+      "user_id": "local-owner",
+      "project_id": "arc-study",
+      "name": "project_created",
+      "entity_id": "arc-study",
+      "timestamp": "2026-09-10T04:52:49.891570+00:00",
+      "is_demo": 1,
+      "properties": {}
+    }
+  ]
+}

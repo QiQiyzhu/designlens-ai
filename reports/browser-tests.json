@@ -1,0 +1,43 @@
+{
+  "stats": {
+    "startTime": "2026-09-10T05:16:38.993Z",
+    "duration": 41958.303,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "cases": [
+    {
+      "title": "original evidence is one click away and modal keyboard focus stays contained",
+      "status": "passed",
+      "duration_ms": 793
+    },
+    {
+      "title": "invalid import is recoverable; CSV import persists exact source and can generate reviewed extracts",
+      "status": "passed",
+      "duration_ms": 908
+    },
+    {
+      "title": "human-reviewed evidence becomes a scored opportunity, a No AI canvas and a planned protocol",
+      "status": "passed",
+      "duration_ms": 1489
+    },
+    {
+      "title": "workflow nodes and prompts version independently; diff, approval and pinned trace are usable",
+      "status": "passed",
+      "duration_ms": 1234
+    },
+    {
+      "title": "evaluation shows actual failed cases and records an explicit human rating",
+      "status": "passed",
+      "duration_ms": 1062
+    },
+    {
+      "title": "analytics keeps synthetic cohorts separate and narrow layouts stay usable",
+      "status": "passed",
+      "duration_ms": 616
+    }
+  ],
+  "database": "Isolated synthetic SQLite, port 8002; no real research database used"
+}
