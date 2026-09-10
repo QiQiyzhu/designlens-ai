@@ -1,5 +1,7 @@
 # DesignLens AI
 
+[![Evidence checks](https://github.com/QiQiyzhu/designlens-ai/actions/workflows/backend.yml/badge.svg)](https://github.com/QiQiyzhu/designlens-ai/actions/workflows/backend.yml) · [A–T interview dossier](docs/interview-dossier.md) · [Actual Linux CI](https://github.com/QiQiyzhu/designlens-ai/actions/runs/34440912752)
+
 **Evidence-driven product discovery: carry a decision from its original evidence through an opportunity, architecture choice, workflow, evaluation and experiment.**
 
 An AI product management portfolio MVP. Its purpose is to make product reasoning inspectable, including the decision **not to use AI**.

@@ -31,4 +31,6 @@ The evidence extractor is deterministic and narrow. Its perfect development-fixt
 
 Real player research, an evidence-selected game intervention, manual Figma work and product experiments remain **PENDING REAL USER RESEARCH / NOT EXECUTED** as applicable.
 
-The GitHub Actions workflow is included under `.github/workflows/backend.yml` with Linux jobs for pinned Python dependencies/pytest and Node build/lint/Playwright. Local checks passed; a remote GitHub Actions run is not represented as passed until the repository owner observes it after push.
+The GitHub Actions workflow under `.github/workflows/backend.yml` actually passed on Linux: [run 34440912752](https://github.com/QiQiyzhu/designlens-ai/actions/runs/34440912752), commit `6211fe89ba41e95449b52e3f38d82505581e84e6`. The backend and browser jobs completed successfully, including 43 backend tests and 6 browser cases.
+
+The additional [read-only HTTP sample](../reports/performance-readonly.json) records 255 actual local requests at 10/25/50 worker concurrency, with zero errors. It is a short synthetic-data observation, not production capacity. Method, raw samples, percentiles and limits are in the [A–T dossier](interview-dossier.md#m-performance-真实结果).
