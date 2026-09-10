@@ -43,12 +43,12 @@ $env:DESIGNLENS_TIMEOUT_SECONDS = '30'
 
 DeepSeek 配置仅允许其官方 HTTPS 主机及 `/v1` 别名，禁止重定向；请求上限 64 KiB，响应读取上限 1 MiB；连接超时 5 秒，其余 HTTP 操作超时默认 30 秒、可配置 5–60 秒。HTTPX 的分阶段超时不是整段执行的硬性墙钟截止。`length`、拒答、工具调用、空输出、非 JSON、429 和网络错误均显式失败；不会偷偷回退到 extractive 并显示模型成功。原始错误响应不写入报告。
 
-默认只向远程发送明确标记 `is_demo=true` 的来源。真实研究保持本机，需独立确认研究授权和服务商数据处理条件后，才可以由本地所有者显式设置 `DESIGNLENS_ALLOW_REAL_REMOTE=1`。接通模型不构成真实研究数据的自动发送授权。
+默认只向远程发送明确标记 `is_demo=true` 的来源。真实研究须先经过本地清理预览、确认后保存，再在来源侧栏填写用途说明并批准云端使用；批准绑定当前内容 SHA256。还需本地所有者确认研究授权及服务商数据处理条件，显式设置 `DESIGNLENS_ALLOW_REAL_REMOTE=1`。**全局开关、逐来源批准与清理审查必须同时有效**。历史来源缺少审查记录时需要重新导入，JSON metadata 不能伪造批准。撤销只阻止未来调用，不能撤回已传输内容。来源与实际渲染请求中的已知邮箱、电话及 token 模式在传输前被拦截；这些规则可能误判或漏掉姓名、地址、间接身份，不能代替人审。[完整使用路径](research-intake-upgrade.md)
 
 ## 什么证据才可以写入作品集
 
 探针保存执行 commit、实际工作树文件字节 SHA256、数据集和提示词 SHA256、实际请求次数、请求/响应摘要、状态码、请求 ID、请求模型和响应模型、耗时、服务商返回的 token 用量及逐案例输出。缓存命中/未命中 token 只在服务商返回时保留；`cost_usd=null`，因为脚本没有拿到账单，不用估算替代真实扣费。
 
-本次适配验证的 [63 项后端测试](../reports/remote-provider-tests.xml) 包括原有 44 项与 19 项远程适配/探针检查；适配检查使用 MockTransport，没有付费模型调用。原有 [48 次确定性夹具结果](../reports/evaluation.md) 继续保留 extractive 来源，不改成 DeepSeek 跑分。此次 [三次真实 DeepSeek 回执](real-model-results.md) 单独保存：两例通过开发契约，第三例过度弃答失败，合计 874 token。人工评分与独立模型质量验证仍待完成。
+历史适配验证的 [63 项后端测试](../reports/remote-provider-tests.xml) 包括原有 44 项与 19 项远程适配/探针检查；当前 [76 项后端检查](../reports/research-intake-tests.xml) 新增 10 项隐私入口与 3 项批测预算检查。这些自动检查没有付费模型调用。原有 [48 次确定性夹具结果](../reports/evaluation.md) 继续保留 extractive 来源，不改成 DeepSeek 跑分。[三次真实 DeepSeek 回执](real-model-results.md) 单独保存：两例通过开发契约，第三例过度弃答失败，合计 874 token。新的 [36 行组件对比协议](research-ablation-protocol.md) 在执行前冻结，默认零调用；实际结果和人工评分仍待完成。
 
 即使三例全部通过，也只证明这三条开发夹具的格式、原文引用及预期行为检查通过。它不能证明语义理解、注入防护完整性、独立测试集泛化或真实产品价值。人工评分保持 pending，真实参与者与有效产品决策保持 0。

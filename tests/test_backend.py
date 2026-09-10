@@ -81,6 +81,7 @@ def test_real_data_requires_consent_and_stays_real(client):
     payload = {"filename": "notes.txt", "content": "Consented redacted local observation", "is_demo": False}
     assert client.post("/api/sources/import", json=payload).status_code == 422
     payload["consent_confirmed"] = True
+    payload["privacy_review_digest"] = client.post("/api/sources/preview", json=payload).json()["preview_digest"]
     source = client.post("/api/sources/import", json=payload).json()["sources"][0]
     assert source["is_demo"] is False
     assert bootstrap(client)["meta"]["real_source_count"] == 1
@@ -186,7 +187,9 @@ def test_no_context_abstains_without_call(client):
 
 
 def test_mixed_demo_data_cannot_count_as_real_run(client):
-    source = client.post("/api/sources/import", json={"filename": "real.txt", "content": "Consented route task", "is_demo": False, "consent_confirmed": True}).json()["sources"][0]
+    payload = {"filename": "real.txt", "content": "Consented route task", "is_demo": False, "consent_confirmed": True}
+    payload["privacy_review_digest"] = client.post("/api/sources/preview", json=payload).json()["preview_digest"]
+    source = client.post("/api/sources/import", json=payload).json()["sources"][0]
     run = client.post("/api/workflows/evidence-workflow/run", json={"input": "route", "source_ids": [source["id"], "demo-route"]}).json()
     assert run["is_demo"] is True
 

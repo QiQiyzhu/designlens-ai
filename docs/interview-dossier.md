@@ -2,18 +2,20 @@
 
 核验日期：2026-09-10。仓库：[QiQiyzhu/designlens-ai](https://github.com/QiQiyzhu/designlens-ai)。本机完整演示：http://127.0.0.1:8001/ 。本项目由 AI 辅助实现，定位是可运行的产品发现与实验设计工具。真实用户访谈尚未开始；默认执行器是确定性证据摘录，不应描述成训练过的模型或生产 SaaS。
 
-**90 秒讲法：** 我想解决产品决策中“结论找不到原始依据”的问题。DesignLens 把来源、人工审核的观察、机会、架构选择、工作流验证和实验协议串起来。用户可以明确选择 No AI，也可以比较规则、检索和模型方案。我实现了可追溯引用、版本快照、持久化人工审批和区分演示/真实数据的分析。当前实际通过 63 项后端测试、6 项浏览器流程，并执行了 48 次合成夹具检查。它证明流程约束可执行；另完成三次真实 DeepSeek 调用，其中两例满足开发契约，一例过度弃答保留为失败；真实需求、用户价值和模型泛化仍待研究。
+**90 秒讲法：** 我想解决产品决策中“结论找不到原始依据”的问题。DesignLens 把来源、人工审核的观察、机会、架构选择、工作流验证和实验协议串起来。用户可以明确选择 No AI，也可以比较规则、检索和模型方案。本轮补齐真实材料的入口：本地清理预览、绑定输入的确认、只保留清理副本，以及绑定内容哈希的逐来源云端批准和撤销。当前实际通过 76 项后端测试、7 项浏览器流程；历史还保留 48 次确定性合成检查。三次真实 DeepSeek 调用中两例满足旧契约，一例过度弃答保留为失败；新的 12×3 组件消融协议在执行前冻结。真实需求、用户价值和模型泛化仍待研究。
 
 ## A. 最终系统架构
 
 ```mermaid
 flowchart LR
   UI[React 六个产品工作区] --> API[FastAPI / Pydantic]
-  API --> R[来源导入 / 洞察审核]
+  API --> P[本地清理预览 / 输入摘要确认]
+  P --> R[保留副本 / 洞察审核]
   R --> O[机会 / 决策 / 可行性]
   O --> W[版本化顺序工作流]
   W --> X[词汇检索 / 精确摘录]
-  W --> L[可选真实 Provider]
+  W --> G[逐来源哈希批准 / 请求隐私检查]
+  G --> L[可选真实 Provider]
   W --> H[持久化人工审批]
   H --> V[Schema / 原文引用验证]
   API --> DB[(SQLite / WAL)]
@@ -32,6 +34,7 @@ DesignLensAI/
 │   ├── models.py          输入边界
 │   ├── db.py              SQLite 与事件记录
 │   ├── importer.py        TXT/MD/CSV/JSON 来源导入
+│   ├── privacy.py         本地清理、输入审查与内容批准
 │   ├── engine.py          检索、摘录、工作流、审批
 │   ├── remote_provider.py DeepSeek 传输、预算、错误回执
 │   ├── feasibility.py     8 类实现方案的规划规则
@@ -39,9 +42,9 @@ DesignLensAI/
 │   ├── analytics.py       群组与漏斗
 │   └── seed.py            明确标注的演示来源
 ├── frontend/src/          六个 React 工作区
-├── frontend/e2e/          真实后端浏览器验收
+├── frontend/tests/        真实后端浏览器验收
 ├── tests/                后端行为测试
-├── evals/                12 个合成开发案例
+├── evals/                历史摘录与新研究入口开发案例
 ├── analytics/            SQL 与可执行分析
 ├── scripts/              评估 / HTTP 采样
 ├── reports/              原始结果与失败案例
@@ -67,7 +70,7 @@ DesignLensAI/
 
 ## D. RAG Pipeline
 
-导入与同意确认 → 原文/来源 ID/演示标记 → 英文词项与中文单字分词 → 交集数量排序 → 截取 Top-K 来源 → 最多 20 条、每条最多 320 字符的精确摘录 → JSON Schema → 引用 ID、原文包含关系及 text=quote 检查 → 人工解释。
+本地清理预览与同意确认 → 不可变保留副本/来源 ID/演示标记 → 英文词项与中文单字分词 → 交集数量排序 → 截取 Top-K 来源 → 最多 20 条、每条最多 320 字符的精确摘录 → JSON Schema → 引用 ID、保留内容包含关系及 text=quote 检查 → 人工解释。删除的原始标识符不属于引用依据；文件摘要只能与操作者保留的原件核对。
 
 实际代码见 [engine.py](../backend/engine.py)。它是可复现的**词汇检索 + 摘录基线**，没有 embedding、向量数据库、重排模型或语义蕴含判断。中文单字匹配和英文词面匹配会遗漏同义表达；原文里出现一句话也不能证明其事实正确。DeepSeek Provider 有真实 HTTP 适配，默认 deepseek-flash；本表的 48 次结果仍来自 extractive。独立 [真实调用配置与证据约定](real-model-setup.md) 将模型探针与合成研究结果分开。
 
@@ -95,7 +98,9 @@ DesignLensAI/
 
 ## I. Security 机制
 
-导入内容被当作数据，不运行文件里的命令、公式或脚本；导入限制 1 MB UTF-8 / 500 记录。真实研究导入要求确认同意与脱敏。SQL 使用参数绑定。密钥来自后端环境变量，不进入前端或 Git。输出采用结构化引用校验，演示数据和真实数据分组统计。
+导入内容被当作数据，不运行文件里的命令、公式或脚本；导入限制 1 MB UTF-8 / 500 记录。真实研究要求本地预览、确认同意及匹配当前输入摘要；数据库不保存原文件、替换词或原值映射。远程发送还需全局开关、逐来源批准和匹配的内容哈希，撤销阻止未来调用。批准与审计在一个事务提交，来源/渲染请求有已知标识符拦截。SQL 使用参数绑定。密钥来自后端环境变量，不进入前端或 Git。
+
+模式清理可能误删合法数字，也可能漏姓名或间接身份；摘要证明输入一致性，不能证明操作者身份或真人同意。原始输入仍会在浏览器编辑内存与本机 API 请求中短暂存在。没有声称端到端匿名化或正式合规认证。[完整取舍](research-intake-upgrade.md)
 
 当前没有登录、RBAC、租户隔离、加密数据库或正式删除/留存治理。请用合成数据做本地面试演示；发布团队版前，身份与数据治理是实质性工程工作。精确引用只能约束输出形式，不能代替模型注入防御评测。
 
@@ -103,15 +108,15 @@ DesignLensAI/
 
 | 层级 | 实际结果 | 证据 |
 |---|---|---|
-| 后端 | 63 passed；44 原有检查 + 19 远程适配/探针检查，零付费模型请求 | [本轮 JUnit](../reports/remote-provider-tests.xml) |
-| 浏览器 | 6 passed，真实 FastAPI/SQLite | [本轮报告](../reports/remote-provider-browser-tests.json) |
+| 后端 | 76 passed；历史 63 + 10 隐私入口 + 3 批测预算检查，零付费模型请求 | [本轮 JUnit](../reports/research-intake-tests.xml) |
+| 浏览器 | 7 passed，真实 FastAPI/SQLite；脚本化合成 QA | [本轮报告](../reports/research-intake-browser.json) |
 | 真实 DeepSeek 小探针 | 3 次响应，2/3 任务契约通过，874 token；非 benchmark | [逐例回执](../reports/deepseek-smoke.json) |
 | 开发夹具 | 12 × 4 = 48 次实际执行 | [原始 JSON](../reports/evaluation.json) |
 | 前端 | TypeScript、lint、production build 通过 | [验证记录](validation-report.md) |
 | 依赖 | npm audit 0 项已知漏洞，当次快照 | [审计](../reports/npm-audit.json) |
-| Linux CI | 适配代码提交 8d7e26b 的 backend + browser 成功 | [Run 34470378441](https://github.com/QiQiyzhu/designlens-ai/actions/runs/34470378441) |
+| Linux CI | 上轮提交 7c1f085 的 backend + browser 成功；本轮待 push 后核验 | [历史 Run 34470687080](https://github.com/QiQiyzhu/designlens-ai/actions/runs/34470687080) |
 
-浏览器六个 case 内覆盖完整业务步骤，不是六个点击断言。流程包括引用回看、CSV 导入与错误恢复、人工审核、机会与实验门控、提示词/工作流版本、持久化审批、失败案例和 390px 布局。自动测试中的“审核人操作”不算真实用户研究。
+浏览器七个 case 内覆盖完整业务步骤，不是七个点击断言。流程包括引用回看、CSV 导入与错误恢复、人工审核、机会与实验门控、提示词/工作流版本、持久化审批、失败案例、390px 布局，以及清理预览失效、云端批准和撤销。自动测试中的“审核人操作”不算真实用户研究。
 
 ## K. RAG Benchmark 真实结果
 
@@ -127,6 +132,8 @@ DesignLensAI/
 ## L. Agent Ablation 真实结果
 
 **N/A：没有自主 Agent。** 评估中 Agent 被明确 skipped。四种实际变体测试输出契约、检索和审批接线；它们不是多 Agent 消融，也不能据此比较智能体解题能力、token 节省或 ROI。产品上排除缺乏必要性的 Agent 本身是可解释的架构选择。
+
+本轮另冻结 [12 案例×3 变体的研究入口组件消融](research-ablation-protocol.md)，分别测试直接合成输入、本地清理、本地清理加上下文门。它是新的开发协议，付费执行待完成；不改写历史 48 次提取或 3 次真实调用，也不叫 Agent 消融。
 
 ## M. Performance 真实结果
 
@@ -149,6 +156,7 @@ DesignLensAI/
 5. 缺少指标分母时原本易展示误导的 0%；改为 null 和空状态。
 6. CSV/JSON 导入失败不应丢失输入；界面保留内容及错误。
 7. 真实 DeepSeek 对 instruction-data 弃答，违反既有“保留敌意材料为引文”的覆盖契约；格式与禁止内容检查通过，整体任务失败。没有泄密观察，也不能由一次弃答证明注入防护完备。[原始结果](real-model-results.md)
+8. 只勾选“已脱敏”及设置全局云端开关不足以约束具体来源；现改成预览摘要确认、内容哈希批准与撤销。电话模式仍会误删合法八位构建号，新的冻结数据特意保留这一反例，不能用删除困难样本提高通过率。
 
 这些修复的验证范围见 [validation-report.md](validation-report.md)。真实用户对流程是否理解、是否愿意使用仍未知。
 
@@ -175,7 +183,7 @@ DesignLensAI/
 | [backend/feasibility.py](../backend/feasibility.py) | 规则建议的边界、No AI 和隐私/延迟约束 |
 | [backend/evaluation.py](../backend/evaluation.py) | 什么算通过，哪些结果是 pending/skipped |
 | [backend/analytics.py](../backend/analytics.py) | 群组、顺序漏斗、空分母 |
-| [backend/seed.py](../backend/seed.py) | 为什么演示标签必须贯穿来源和派生结果 |
+| [backend/privacy.py](../backend/privacy.py) | 清理建议、审查摘要、内容批准与原件不持久化的边界 |
 | [backend/remote_provider.py](../backend/remote_provider.py) | DeepSeek 思考开关、请求边界、失败保留与真实用量 |
 
 ## Q. 5 个必须读懂的 Frontend 文件
@@ -185,7 +193,7 @@ DesignLensAI/
 | [App.tsx](../frontend/src/App.tsx) | 工作区状态、来源导入、错误处理与焦点管理 |
 | [WorkspacePanels.tsx](../frontend/src/WorkspacePanels.tsx) | 机会、可行性、版本、审批、评估与分析的交互 |
 | [api.ts](../frontend/src/api.ts) | 真实接口请求、响应与错误传播 |
-| [main.tsx](../frontend/src/main.tsx) | React 挂载和 StrictMode |
+| [PrivacyReview.tsx](../frontend/src/PrivacyReview.tsx) | 清理副本预览、逐来源批准与撤销、错误恢复 |
 | [style.css](../frontend/src/style.css) | 信息层级、窄屏、弹窗与滚动边界 |
 
 两个主组件文件仍偏长；面试时应说明未来按独立业务区域拆分，不能说已经实现复杂前端领域架构。
@@ -194,7 +202,7 @@ DesignLensAI/
 
 以下是现有代码的核心表达式或等价教学缩写；完整异常分支以链接源文件为准。
 
-1. **真实来源门控**（importer.py）：`if not request.is_demo and not request.consent_confirmed: raise ValueError(...)`。客户端勾选不能成为系统具有完整合规能力的证明。
+1. **真实来源门控**（privacy.py）：导入检查 `request.privacy_review_digest == preview["preview_digest"]`；远程检查 `allow_real and sharing["approved"] and sharing["content_sha256"] == content_hash(source["content"])`，并同时检查清理审查状态。解释输入摘要和内容摘要为什么不同、撤销为何不能追回已经发送的数据。完整条件以源码为准。
 2. **安全读取**（db.py）：`db.execute("SELECT data FROM entities WHERE id=? AND kind=?", (entity_id, kind))`。不能把用户输入插入 SQL 字符串。
 3. **事务释放**（db.py）：`try: yield db; db.commit()` / `except: db.rollback(); raise` / `finally: db.close()`。解释提交异常、回滚和关闭的顺序。
 4. **稳定检索排序**（engine.py）：`ranked.sort(key=lambda x: (-x[0], x[1]))`。第一项是词项交集数，第二项保留同分来源顺序。
@@ -219,7 +227,7 @@ DesignLensAI/
 10. **为什么 V1 是 0/12？** 文本输出故意不符合结构化契约；它显示契约差异，不是差模型。
 11. **为什么 token/cost 为空？** 默认 extractor 没有模型调用；远程适配只记录服务商实际返回的 usage，未知账单仍为 null。
 12. **工作流运行中修改提示词怎么办？** 使用启动时深拷贝的固定版本；新配置影响新的运行。
-13. **审批页面刷新会怎样？** 等待状态和 next_node 已持久化，可重新加载并继续。
+13. **批准后内容变了，或人撤销了怎么办？** 云端批准绑定当前保留内容哈希，过期哈希拒绝；撤销阻止未来请求，不能撤回过去传输。工作流执行快照与多进程竞争仍需要额外事务设计。
 14. **洞察被驳回后旧机会怎么办？** 确认与实验创建重新验证依赖，阻止 stale evidence 静默进入下一步。
 15. **怎样防止演示 DAU 伪装成真实增长？** is_demo 贯穿来源、运行和事件，查询显式选择群组。
 16. **漏斗为什么需要顺序？** 创建实验后补来源不能算正常转化；同项目按时间逐步推进。
@@ -234,8 +242,8 @@ DesignLensAI/
 
 - 构建 React/FastAPI/SQLite 产品发现原型，将证据来源、人工审核、机会排序、架构评估和实验协议连接为可追溯流程。
 - 实现提示词与工作流不可变版本、运行快照和持久化人工审批，通过后端约束阻止未审核或已驳回证据进入确认决策。
-- 建立并执行 63 项后端测试、6 项真实后端浏览器流程及 48 次合成开发夹具检查，保留失败、待审批与未运行结果。
-- 实现带来源 ID 的精确摘录校验、演示/真实数据群组隔离及顺序漏斗分析，完成实际 Linux CI 验证。
+- 建立并执行 76 项后端测试、7 项真实后端浏览器流程，保留 48 次历史合成检查及失败、待审批与未运行结果。
+- 实现本地材料清理预览、输入摘要确认和逐来源内容哈希批准/撤销，批准与审计单事务提交；规则局限和真实研究状态可见。
 - 接入有输出上限、零重试与失败回执的 DeepSeek 服务端适配；执行 3 次真实合成案例调用，保存 2 例契约通过与 1 例过度弃答失败、874 token 及逐请求延迟，未将调用成功等同用户价值。
 
 不要写“提升留存”“完成真实用户研究”“模型准确率提升到 100%”“生产多租户安全”或“已完成 Figma 设计”。这些都没有当前证据支持。

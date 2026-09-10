@@ -53,7 +53,7 @@ test("invalid import is recoverable; CSV import persists exact source and can ge
   const dialog = page.getByRole("dialog", { name: "Import evidence" });
   await dialog.getByLabel("Filename", { exact: true }).fill("fixture.json");
   await dialog.getByLabel("Content", { exact: true }).fill("{broken");
-  await dialog.getByRole("button", { name: "Save decision" }).click();
+  await dialog.getByRole("button", { name: "Preview local cleanup" }).click();
   await expect(dialog.getByRole("alert")).toBeVisible();
   await expect(dialog.getByLabel("Content", { exact: true })).toHaveValue(
     "{broken",
@@ -64,7 +64,9 @@ test("invalid import is recoverable; CSV import persists exact source and can ge
     .fill(
       'content,participant,segment\n"SYNTHETIC: route labels should explain a key cost.",Browser fixture,Route QA',
     );
-  await dialog.getByRole("button", { name: "Save decision" }).click();
+  await dialog.getByRole("button", { name: "Preview local cleanup" }).click();
+  await dialog.getByLabel("I reviewed the cleaned content and remaining identifiers").check();
+  await dialog.getByRole("button", { name: "Import reviewed copy" }).click();
   await expect(dialog).not.toBeVisible();
   await page.getByRole("button", { name: /^Route QA/ }).click();
   await expect(
@@ -280,4 +282,50 @@ test("analytics keeps synthetic cohorts separate and narrow layouts stay usable"
     ),
   ).toBeTruthy();
   await shot(page, "research-mobile");
+});
+
+test("local privacy preview invalidates edited input and sharing can be approved then revoked", async ({ page }) => {
+  await page.getByRole("button", { name: "Add evidence" }).click();
+  const dialog = page.getByRole("dialog", { name: "Import evidence" });
+  await dialog.getByLabel("Filename", { exact: true }).fill("privacy-qa.txt");
+  await dialog.getByLabel("Source / participant", { exact: true }).fill("Alex Demo");
+  await dialog.getByLabel("Segment", { exact: true }).fill("Privacy intake QA");
+  await dialog.getByLabel("Content", { exact: true }).fill("SYNTHETIC QA ONLY: Alex Demo finds the route map unclear. Email alex@example.invalid or call +1 (415) 555-0100.");
+  await dialog.getByLabel("Names or phrases to remove · one per line", { exact: true }).fill("Alex Demo");
+  await dialog.getByLabel("This is real research data").check();
+  await dialog.getByLabel("Consent to collect and retain this research has been confirmed").check();
+  await dialog.getByRole("button", { name: "Preview local cleanup" }).click();
+  let preview = dialog.getByRole("region", { name: "Cleaned source preview" });
+  await expect(preview).toContainText("[EMAIL]");
+  await expect(preview).toContainText("[PHONE]");
+  await expect(preview).not.toContainText("alex@example.invalid");
+  await dialog.getByLabel("I reviewed the cleaned content and remaining identifiers").check();
+  await dialog.getByLabel("Segment", { exact: true }).fill("Privacy intake QA revised");
+  await expect(preview).not.toBeVisible();
+  await expect(dialog.getByRole("button", { name: "Preview local cleanup" })).toBeVisible();
+  await dialog.getByRole("button", { name: "Preview local cleanup" }).click();
+  preview = dialog.getByRole("region", { name: "Cleaned source preview" });
+  await expect(dialog.getByRole("button", { name: "Import reviewed copy" })).toBeDisabled();
+  await dialog.getByLabel("I reviewed the cleaned content and remaining identifiers").check();
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBeTruthy();
+  await dialog.getByRole("button", { name: "Import reviewed copy" }).scrollIntoViewIfNeeded();
+  await page.screenshot({ path: "../docs/screenshots/privacy-preview-mobile.png", fullPage: false });
+  await dialog.getByRole("button", { name: "Import reviewed copy" }).click();
+  await expect(dialog).not.toBeVisible();
+  await page.setViewportSize({ width: 1440, height: 1024 });
+  await page.getByRole("button", { name: /^Privacy intake QA revised/ }).click();
+  const source = page.getByRole("dialog", { name: "Original evidence" });
+  await expect(source.getByRole("heading", { name: "Local-only research source" })).toBeVisible();
+  await expect(source).not.toContainText("alex@example.invalid");
+  await source.getByLabel("Sharing review note").fill("Scripted synthetic QA of consent UI; not a real participant review.");
+  await source.getByLabel("I have authorization to share this cleaned source with the configured model service").check();
+  await source.getByRole("button", { name: "Approve this source for cloud use" }).click();
+  await expect(source.getByRole("heading", { name: "Reviewed cloud use approved" })).toBeVisible();
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.screenshot({ path: "../docs/screenshots/privacy-source-review.png", fullPage: false });
+  await source.getByLabel("Sharing review note").fill("Scripted QA: withdraw permission for any future remote use.");
+  await source.getByRole("button", { name: "Revoke future cloud use" }).click();
+  await expect(source.getByRole("heading", { name: "Local-only research source" })).toBeVisible();
+  await page.keyboard.press("Escape");
 });

@@ -12,6 +12,7 @@ from jsonschema import Draft202012Validator, SchemaError, ValidationError, valid
 
 from .db import now, uid
 from .remote_provider import RemoteConfig, RemoteProviderError, call_remote
+from .privacy import ensure_remote_sources, clean_text
 
 
 OUTPUT_SCHEMA = {
@@ -84,10 +85,11 @@ def provider_call(prompt: dict, user_input: str, sources: list[dict], rendered: 
     if provider not in ("deepseek", "openai-compatible", "qwen"):
         raise ValueError("DESIGNLENS_PROVIDER must be extractive, deepseek, qwen or openai-compatible")
     RemoteConfig.from_env()
-    if any(s.get("is_demo") is not True for s in sources) and os.environ.get("DESIGNLENS_ALLOW_REAL_REMOTE") != "1":
-        raise ValueError("Real evidence is local-only; explicit remote data permission is not configured")
+    ensure_remote_sources(sources, os.environ.get("DESIGNLENS_ALLOW_REAL_REMOTE") == "1")
     context = json.dumps([{"evidence_id": s["id"], "content": s["content"]} for s in sources], ensure_ascii=False)
     message = rendered or prompt["template"].replace("{{input}}", user_input).replace("{{context}}", context)
+    if clean_text(message)[1]:
+        raise ValueError("Possible identifier in rendered input; clean it locally before remote generation")
     return call_remote(prompt, message, OUTPUT_SCHEMA)
 
 

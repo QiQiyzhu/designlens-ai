@@ -17,6 +17,15 @@ class ImportRequest(StrictModel):
     segment: str = Field(default="unspecified", max_length=200)
     is_demo: bool = True
     consent_confirmed: bool = False
+    redaction_terms: list[str] = Field(default_factory=list, max_length=30)
+    privacy_review_digest: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
+
+
+class RemoteReviewRequest(StrictModel):
+    approved: bool
+    content_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    note: str = Field(min_length=10, max_length=2000)
+    consent_confirmed: bool = False
 
 
 class GenerateRequest(StrictModel):

@@ -15,10 +15,10 @@ from .db import Store, now, uid
 from .engine import approve_run, execute_run, grounding_errors, new_run, provider_call, validate_nodes, version_diff
 from .evaluation import run_evaluation
 from .feasibility import assess
-from .importer import parse_import
+from .privacy import preview_import, reviewed_import, content_hash, clean_text
 from .models import (ApprovalRequest, DecisionRequest, EvaluationRequest, ExperimentRequest, FeasibilityRequest,
                      GenerateRequest, HumanRatingRequest, ImportRequest, InsightReview, OpportunityRequest,
-                     PromptRequest, RollbackRequest, RunRequest, WorkflowRequest)
+                     PromptRequest, RollbackRequest, RunRequest, WorkflowRequest, RemoteReviewRequest)
 from .seed import seed
 
 
@@ -64,9 +64,13 @@ def create_app(db_path: str | None = None, seed_demo: bool = True) -> FastAPI:
                          "real_source_count": sum(not s["is_demo"] for s in store.all("sources")), "real_participant_count": None,
                          "scope": "Single-user local workspace; no auth or arbitrary MCP execution"}}
 
+    @app.post("/api/sources/preview")
+    def preview_sources(request: ImportRequest):
+        return preview_import(request)
+
     @app.post("/api/sources/import", status_code=201)
     def import_sources(request: ImportRequest):
-        sources = parse_import(request)
+        sources = reviewed_import(request)
         # Validation completes before persistence: a malformed row cannot partially import a file.
         with store.connect() as db:
             import json
@@ -79,6 +83,30 @@ def create_app(db_path: str | None = None, seed_demo: bool = True) -> FastAPI:
     @app.get("/api/sources/{source_id}")
     def source_detail(source_id: str):
         return require("sources", source_id)
+
+    @app.post("/api/sources/{source_id}/remote-review")
+    def review_source_remote(source_id: str, request: RemoteReviewRequest):
+        import json
+        with store.connect() as db:
+            db.execute("BEGIN IMMEDIATE")
+            row = db.execute("SELECT data FROM entities WHERE kind='sources' AND id=?", (source_id,)).fetchone()
+            if row is None:
+                raise HTTPException(404, "Source not found")
+            source = json.loads(row[0])
+            digest = content_hash(source["content"])
+            if request.content_sha256 != digest:
+                raise HTTPException(409, "Source changed; review its current content")
+            if request.approved:
+                if not request.consent_confirmed or source.get("privacy_review", {}).get("status") != "reviewed" or source["privacy_review"].get("content_sha256") != digest:
+                    raise ValueError("Remote approval needs consent and a reviewed cleaned source")
+                if clean_text(source["content"])[1]:
+                    raise ValueError("Possible identifier remains; re-import through local cleanup")
+            source["remote_review"] = {"approved": request.approved, "content_sha256": digest,
+                                       "note": request.note, "reviewed_at": now(), "reviewer": "local-owner"}
+            db.execute("UPDATE entities SET data=? WHERE kind='sources' AND id=?", (json.dumps(source, ensure_ascii=False), source_id))
+            db.execute("INSERT INTO events VALUES(?,?,?,?,?,?,?,?)", (uid("evt"), "local-owner", "arc-study", "source_remote_reviewed", source_id,
+                       now(), int(source["is_demo"]), json.dumps({"approved": request.approved, "content_sha256": digest})))
+        return source
 
     @app.post("/api/insights/generate", status_code=201)
     def generate_insights(request: GenerateRequest):

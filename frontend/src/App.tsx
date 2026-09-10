@@ -5,7 +5,7 @@ import {
   WorkflowStudio,
   object,
 } from "./WorkspacePanels";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import {
   Layers,
   Library,
@@ -27,6 +27,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { api, text, type Bootstrap, type Row } from "./api";
+import { CleanupPreview, SourcePrivacyReview, type IntakePreview } from "./PrivacyReview";
 const nav = [
   ["Research", Library],
   ["Opportunities", GitFork],
@@ -52,6 +53,9 @@ const empty = {
   project: { id: "arc-study" },
 } as Bootstrap;
 export default function App() {
+  const [privacyPreview, setPrivacyPreview] = useState<IntakePreview | null>(null);
+  const [cleanupReviewed, setCleanupReviewed] = useState(false);
+  const intakeRevision = useRef(0);
   const [data, setData] = useState(empty),
     [screen, setScreen] = useState("Research"),
     [error, setError] = useState(""),
@@ -92,8 +96,11 @@ export default function App() {
       setBusy(false);
     }
   };
-  const update = (key: string, value: string) =>
+  const update = (key: string, value: string) => {
+    intakeRevision.current++;
     setForm((f) => ({ ...f, [key]: value }));
+    setPrivacyPreview(null); setCleanupReviewed(false);
+  };
   function field(
     label: string,
     key: string,
@@ -123,8 +130,10 @@ export default function App() {
     );
   }
   function show(name: string) {
+    intakeRevision.current++;
     setDialog(name);
     setForm({});
+    setPrivacyPreview(null); setCleanupReviewed(false);
     setMessage("");
     setError("");
   }
@@ -164,18 +173,29 @@ export default function App() {
     };
   }, [dialog, evidence]);
   const accepted = data.insights.filter((i) => i.status === "accepted");
+  const intakePayload = () => ({
+    filename: form.filename || "feedback.txt", content: form.content,
+    type: form.type || "User Feedback", participant: form.participant || "Demo source",
+    segment: form.segment || "New players", is_demo: form.real !== "yes",
+    consent_confirmed: form.consent === "yes",
+    redaction_terms: (form.redactions || "").split("\n").map((x) => x.trim()).filter(Boolean),
+  });
   async function submit() {
+    if (dialog === "Import evidence" && !privacyPreview) {
+      const revision = intakeRevision.current;
+      await act(async () => {
+        const preview = await api<IntakePreview>("/sources/preview", "POST", intakePayload());
+        if (revision !== intakeRevision.current) throw Error("Input changed while preparing preview. Preview the current input again.");
+        setPrivacyPreview(preview);
+        setCleanupReviewed(false);
+      }, "Preview ready. Nothing has been saved or sent to a model.");
+      return;
+    }
     await act(async () => {
       let value: unknown;
       if (dialog === "Import evidence") {
         value = await api("/sources/import", "POST", {
-          filename: form.filename || "feedback.txt",
-          content: form.content,
-          type: form.type || "User Feedback",
-          participant: form.participant || "Demo source",
-          segment: form.segment || "New players",
-          is_demo: form.real !== "yes",
-          consent_confirmed: form.consent === "yes",
+          ...intakePayload(), privacy_review_digest: privacyPreview?.preview_digest,
         });
       } else if (dialog === "Review insight") {
         value = await api("/insights/" + form.id, "PATCH", {
@@ -411,7 +431,7 @@ export default function App() {
                     {data.sources.length}
                     <small>sources</small>
                   </strong>
-                  <p>Original text remains accessible</p>
+                  <p>Retained source stays inspectable</p>
                 </article>
                 <article>
                   <span>Suggested insights</span>
@@ -548,7 +568,7 @@ export default function App() {
                     )}
                   </div>
                   <div className="panel-foot">
-                    {selected.length} selected · Original sources are never
+                    {selected.length} selected · Retained sources are never
                     rewritten by suggestions.
                   </div>
                 </section>
@@ -562,7 +582,7 @@ export default function App() {
                       <h3>Listen before drawing conclusions.</h3>
                       <p>
                         Select evidence and find signals. Every suggestion links
-                        back to its original sources.
+                        back to its retained sources.
                       </p>
                     </div>
                   ) : (
@@ -950,7 +970,7 @@ export default function App() {
             >
               <X size={18} />
             </button>
-            <div className="eyebrow">ORIGINAL SOURCE</div>
+            <div className="eyebrow">RETAINED SOURCE · EXACT CITATION BASIS</div>
             <h2>{text(evidence.participant || evidence.id)}</h2>
             <p>
               {text(evidence.type)} · {text(evidence.segment)}
@@ -959,6 +979,7 @@ export default function App() {
               {evidence.is_demo ? "DEMO / SYNTHETIC" : "Real source"}
             </span>
             <blockquote>{text(evidence.content)}</blockquote>
+            <SourcePrivacyReview key={evidence.id} source={evidence} onUpdated={async (source) => { setEvidence(source); await reload(); }} />
             <h3>Provenance</h3>
             <Json value={evidence} />
           </section>
@@ -1027,6 +1048,8 @@ export default function App() {
                   "Paste source text or choose a file",
                   true,
                 )}
+                {field("Names or phrases to remove · one per line", "redactions", "Add names, addresses or identifiers the local patterns cannot recognize.", true)}
+                <p>Cleanup runs locally. Email, phone and common token patterns are suggestions; names and indirect identifiers need your review. Only the reviewed copy is retained.</p>
                 <label className="check">
                   <input
                     type="checkbox"
@@ -1046,9 +1069,10 @@ export default function App() {
                         update("consent", e.target.checked ? "yes" : "no")
                       }
                     />{" "}
-                    Consent and anonymization have been confirmed
+                    Consent to collect and retain this research has been confirmed
                   </label>
                 )}
+                {privacyPreview && <CleanupPreview preview={privacyPreview} reviewed={cleanupReviewed} onReview={setCleanupReviewed} />}
               </>
             ) : dialog === "Review insight" ? (
               <>
@@ -1222,10 +1246,10 @@ export default function App() {
               <button onClick={() => setDialog(null)}>Cancel</button>
               <button
                 className="primary"
-                disabled={busy}
+                disabled={busy || (dialog === "Import evidence" && privacyPreview !== null && !cleanupReviewed)}
                 onClick={() => void submit()}
               >
-                {busy ? "Saving…" : "Save decision"}
+                {busy ? "Working…" : dialog === "Import evidence" ? privacyPreview ? "Import reviewed copy" : "Preview local cleanup" : "Save decision"}
               </button>
             </div>
           </section>

@@ -10,10 +10,10 @@ from .db import now, uid
 from .models import ImportRequest, SOURCE_TYPES
 
 
-def parse_import(request: ImportRequest) -> list[dict]:
+def parse_import(request: ImportRequest, *, preview: bool = False) -> list[dict]:
     if request.type not in SOURCE_TYPES:
         raise ValueError("Unknown source type")
-    if not request.is_demo and not request.consent_confirmed:
+    if not preview and not request.is_demo and not request.consent_confirmed:
         raise ValueError("Confirm consent and redaction before importing real research")
     if len(request.content.encode("utf-8")) > 1_000_000:
         raise ValueError("Import must be at most 1 MB UTF-8")
