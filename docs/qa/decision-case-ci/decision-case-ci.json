@@ -11,45 +11,31 @@
   "sources": [
     {
       "path": "reports/evaluation.json",
-      "sha256": "f287301907687a86e0887fd1319f8851c66c33843562a5fdabec02dca266ea4d",
-      "sha256_scope": "UTF-8 source text, CRLF normalized to LF for GitHub/fresh-clone comparison",
-      "working_tree_sha256": "938c11df57862b31119f006e135f539c8e236cc30df708df1248ef091581b482"
+      "sha256": "f287301907687a86e0887fd1319f8851c66c33843562a5fdabec02dca266ea4d"
     },
     {
       "path": "evals/evidence-cases.json",
-      "sha256": "71ecece501189fd39ec5cb244485247231a5bb06115d31171452bf0bc72131dc",
-      "sha256_scope": "UTF-8 source text, CRLF normalized to LF for GitHub/fresh-clone comparison",
-      "working_tree_sha256": "71ecece501189fd39ec5cb244485247231a5bb06115d31171452bf0bc72131dc"
+      "sha256": "71ecece501189fd39ec5cb244485247231a5bb06115d31171452bf0bc72131dc"
     },
     {
       "path": "backend/engine.py",
-      "sha256": "d1d24f26e09b54b828b5f8ae447e05634cff0fcf970c52db27b65bbf40cd2857",
-      "sha256_scope": "UTF-8 source text, CRLF normalized to LF for GitHub/fresh-clone comparison",
-      "working_tree_sha256": "d1d24f26e09b54b828b5f8ae447e05634cff0fcf970c52db27b65bbf40cd2857"
+      "sha256": "d1d24f26e09b54b828b5f8ae447e05634cff0fcf970c52db27b65bbf40cd2857"
     },
     {
       "path": "backend/app.py",
-      "sha256": "0553a31c4a26dc4f6c2d13f7ff1e53f6876129f0c6d2e42dac4760f43d97629d",
-      "sha256_scope": "UTF-8 source text, CRLF normalized to LF for GitHub/fresh-clone comparison",
-      "working_tree_sha256": "0553a31c4a26dc4f6c2d13f7ff1e53f6876129f0c6d2e42dac4760f43d97629d"
+      "sha256": "0553a31c4a26dc4f6c2d13f7ff1e53f6876129f0c6d2e42dac4760f43d97629d"
     },
     {
       "path": "backend/evaluation.py",
-      "sha256": "f518f01f82bf7903ba683f2ee882ef4c64670d6d9f92b15e15ed981dcc6c8db6",
-      "sha256_scope": "UTF-8 source text, CRLF normalized to LF for GitHub/fresh-clone comparison",
-      "working_tree_sha256": "f518f01f82bf7903ba683f2ee882ef4c64670d6d9f92b15e15ed981dcc6c8db6"
+      "sha256": "f518f01f82bf7903ba683f2ee882ef4c64670d6d9f92b15e15ed981dcc6c8db6"
     },
     {
       "path": "scripts/decision_case.py",
-      "sha256": "475f564a0b1a23e6601b4633c7965fa589049156c8cb61c786e9318ab8632bf4",
-      "sha256_scope": "UTF-8 source text, CRLF normalized to LF for GitHub/fresh-clone comparison",
-      "working_tree_sha256": "475f564a0b1a23e6601b4633c7965fa589049156c8cb61c786e9318ab8632bf4"
+      "sha256": "0709123ee8a0c1c67dfec948762e65cf17bfc4b0b0548cd1f92b9610a38ca3c1"
     },
     {
       "path": "docs/research/arc-shift-plan.md",
-      "sha256": "9fbf46cd1e4295db339a4dc2901a8b6a07abd9f7af13c854772e03b57b44b9ec",
-      "sha256_scope": "UTF-8 source text, CRLF normalized to LF for GitHub/fresh-clone comparison",
-      "working_tree_sha256": "9fbf46cd1e4295db339a4dc2901a8b6a07abd9f7af13c854772e03b57b44b9ec"
+      "sha256": "9fbf46cd1e4295db339a4dc2901a8b6a07abd9f7af13c854772e03b57b44b9ec"
     }
   ],
   "summary": {
@@ -3992,16 +3978,16 @@
     }
   ],
   "boundary_execution": {
-    "executed_at": "2026-09-10T09:53:12.815951+00:00",
+    "executed_at": "2026-09-10T10:00:25.629294+00:00",
     "environment": {
-      "python": "3.11.0",
-      "platform": "Windows-10-10.0.22631-SP0",
+      "python": "3.11.16",
+      "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
       "database": "Actual isolated SQLite via FastAPI TestClient; no TCP/browser in this probe"
     },
     "method": "48 actual deterministic extractions/workflows plus HTTP application boundary checks; scripted review is QA, not user research",
     "evaluation": {
-      "id": "eval_175ad22b7865",
-      "created_at": "2026-09-10T09:53:12.385067+00:00",
+      "id": "eval_07e86003dc3b",
+      "created_at": "2026-09-10T10:00:25.506027+00:00",
       "workflow_id": "evidence-workflow",
       "workflow_version": 1,
       "dataset_id": "designlens-evidence-dev-v1",
@@ -4032,7 +4018,7 @@
           "format_validity": 1,
           "evidence_grounding": 1,
           "unsupported_claims": 0,
-          "latency_ms_mean": 0.004,
+          "latency_ms_mean": 0.007,
           "token_usage": null,
           "human_rating": null,
           "pending_human_review": 0
@@ -4046,7 +4032,7 @@
           "format_validity": 1,
           "evidence_grounding": 1,
           "unsupported_claims": 0,
-          "latency_ms_mean": 0.096,
+          "latency_ms_mean": 0.163,
           "token_usage": null,
           "human_rating": null,
           "pending_human_review": 0
@@ -4060,7 +4046,7 @@
           "format_validity": 1,
           "evidence_grounding": 1,
           "unsupported_claims": 0,
-          "latency_ms_mean": 0.12,
+          "latency_ms_mean": 0.13,
           "token_usage": null,
           "human_rating": null,
           "pending_human_review": 10
@@ -4090,7 +4076,7 @@
           "grounding_errors": [
             "format: 'SYNTHETIC: The route legend is difficult to find.' is not of type 'object'"
           ],
-          "latency_ms": 0.03,
+          "latency_ms": 0.018,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4128,7 +4114,7 @@
           "grounding_errors": [
             "format: 'Insufficient evidence.' is not of type 'object'"
           ],
-          "latency_ms": 0.008,
+          "latency_ms": 0.009,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4162,7 +4148,7 @@
           "grounding_errors": [
             "format: 'SYNTHETIC: The invoice export arrived on Tuesday.' is not of type 'object'"
           ],
-          "latency_ms": 0.008,
+          "latency_ms": 0.012,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4198,7 +4184,7 @@
           "grounding_errors": [
             "format: 'SYNTHETIC: For route choice, one scenario wants labels.\\nSYNTHETIC: For route choice, a counterexample prefers discovery.' is not of type 'object'"
           ],
-          "latency_ms": 0.008,
+          "latency_ms": 0.013,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4238,7 +4224,7 @@
           "grounding_errors": [
             "format: '合成测试场景：圣剑的近战距离需要用图标解释。' is not of type 'object'"
           ],
-          "latency_ms": 0.016,
+          "latency_ms": 0.012,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4314,7 +4300,7 @@
           "grounding_errors": [
             "format: 'SYNTHETIC: A health route needs a clear icon.' is not of type 'object'"
           ],
-          "latency_ms": 0.006,
+          "latency_ms": 0.011,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4353,7 +4339,7 @@
           "grounding_errors": [
             "format: 'SYNTHETIC: One onboarding scenario involves an unclear control hint. No prevalence or effect has been measured.' is not of type 'object'"
           ],
-          "latency_ms": 0.026,
+          "latency_ms": 0.013,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4391,7 +4377,7 @@
           "grounding_errors": [
             "format: 'SYNTHETIC: A rule label may explain the key cost without any AI feature.' is not of type 'object'"
           ],
-          "latency_ms": 0.006,
+          "latency_ms": 0.009,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4429,7 +4415,7 @@
           "grounding_errors": [
             "format: 'SYNTHETIC research plan: recruit 8–12 people; sessions are planned, not completed.' is not of type 'object'"
           ],
-          "latency_ms": 0.008,
+          "latency_ms": 0.009,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4467,7 +4453,7 @@
           "grounding_errors": [
             "format: 'SYNTHETIC UI labels: compare <route>, \"key\", and HP/resources; render these as text.' is not of type 'object'"
           ],
-          "latency_ms": 0.006,
+          "latency_ms": 0.008,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4505,7 +4491,7 @@
           "grounding_errors": [
             "format: 'SYNTHETIC: A build meaning scenario requires explaining card interactions.\\nSYNTHETIC: Another build meaning scenario requires distinguishing weapon shapes.' is not of type 'object'"
           ],
-          "latency_ms": 0.005,
+          "latency_ms": 0.009,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4552,7 +4538,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.004,
+          "latency_ms": 0.008,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4591,7 +4577,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.003,
+          "latency_ms": 0.007,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4632,7 +4618,7 @@
           "task_success": false,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.004,
+          "latency_ms": 0.008,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4680,7 +4666,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.006,
+          "latency_ms": 0.008,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4727,7 +4713,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.004,
+          "latency_ms": 0.008,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4772,7 +4758,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.003,
+          "latency_ms": 0.007,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4817,7 +4803,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.004,
+          "latency_ms": 0.008,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4863,7 +4849,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.004,
+          "latency_ms": 0.007,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4908,7 +4894,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.004,
+          "latency_ms": 0.007,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4953,7 +4939,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.005,
+          "latency_ms": 0.007,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -4998,7 +4984,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.004,
+          "latency_ms": 0.007,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -5048,7 +5034,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.004,
+          "latency_ms": 0.008,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -5095,7 +5081,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.973,
+          "latency_ms": 1.688,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -5134,7 +5120,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.012,
+          "latency_ms": 0.016,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -5169,7 +5155,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.012,
+          "latency_ms": 0.021,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -5215,7 +5201,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.017,
+          "latency_ms": 0.031,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -5262,7 +5248,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.037,
+          "latency_ms": 0.027,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -5307,7 +5293,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.015,
+          "latency_ms": 0.024,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -5352,7 +5338,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.015,
+          "latency_ms": 0.025,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -5398,7 +5384,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.014,
+          "latency_ms": 0.023,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -5443,7 +5429,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.012,
+          "latency_ms": 0.021,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -5488,7 +5474,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.013,
+          "latency_ms": 0.025,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -5533,7 +5519,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.013,
+          "latency_ms": 0.024,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -5583,7 +5569,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.017,
+          "latency_ms": 0.028,
           "token_usage": null,
           "human_rating": null,
           "status": "completed",
@@ -5630,7 +5616,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.197,
+          "latency_ms": 0.163,
           "token_usage": null,
           "human_rating": null,
           "status": "pending_approval",
@@ -5667,7 +5653,7 @@
               "node_id": "model",
               "type": "LLM",
               "status": "completed",
-              "provider_latency_ms": 0.005
+              "provider_latency_ms": 0.004
             },
             {
               "node_id": "review",
@@ -5708,7 +5694,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.059,
+          "latency_ms": 0.095,
           "token_usage": null,
           "human_rating": null,
           "status": "abstained",
@@ -5763,7 +5749,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.062,
+          "latency_ms": 0.098,
           "token_usage": null,
           "human_rating": null,
           "status": "abstained",
@@ -5829,7 +5815,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.086,
+          "latency_ms": 0.139,
           "token_usage": null,
           "human_rating": null,
           "status": "pending_approval",
@@ -5867,7 +5853,7 @@
               "node_id": "model",
               "type": "LLM",
               "status": "completed",
-              "provider_latency_ms": 0.003
+              "provider_latency_ms": 0.005
             },
             {
               "node_id": "review",
@@ -5916,7 +5902,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.085,
+          "latency_ms": 0.127,
           "token_usage": null,
           "human_rating": null,
           "status": "pending_approval",
@@ -5953,7 +5939,7 @@
               "node_id": "model",
               "type": "LLM",
               "status": "completed",
-              "provider_latency_ms": 0.003
+              "provider_latency_ms": 0.004
             },
             {
               "node_id": "review",
@@ -6000,7 +5986,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.128,
+          "latency_ms": 0.124,
           "token_usage": null,
           "human_rating": null,
           "status": "pending_approval",
@@ -6037,7 +6023,7 @@
               "node_id": "model",
               "type": "LLM",
               "status": "completed",
-              "provider_latency_ms": 0.004
+              "provider_latency_ms": 0.005
             },
             {
               "node_id": "review",
@@ -6084,7 +6070,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.169,
+          "latency_ms": 0.131,
           "token_usage": null,
           "human_rating": null,
           "status": "pending_approval",
@@ -6170,7 +6156,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.113,
+          "latency_ms": 0.145,
           "token_usage": null,
           "human_rating": null,
           "status": "pending_approval",
@@ -6254,7 +6240,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.141,
+          "latency_ms": 0.115,
           "token_usage": null,
           "human_rating": null,
           "status": "pending_approval",
@@ -6291,7 +6277,7 @@
               "node_id": "model",
               "type": "LLM",
               "status": "completed",
-              "provider_latency_ms": 0.005
+              "provider_latency_ms": 0.004
             },
             {
               "node_id": "review",
@@ -6338,7 +6324,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.188,
+          "latency_ms": 0.121,
           "token_usage": null,
           "human_rating": null,
           "status": "pending_approval",
@@ -6375,7 +6361,7 @@
               "node_id": "model",
               "type": "LLM",
               "status": "completed",
-              "provider_latency_ms": 0.007
+              "provider_latency_ms": 0.004
             },
             {
               "node_id": "review",
@@ -6422,7 +6408,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.107,
+          "latency_ms": 0.159,
           "token_usage": null,
           "human_rating": null,
           "status": "pending_approval",
@@ -6511,7 +6497,7 @@
           "task_success": true,
           "unsupported_claims": 0,
           "grounding_errors": [],
-          "latency_ms": 0.108,
+          "latency_ms": 0.14,
           "token_usage": null,
           "human_rating": null,
           "status": "pending_approval",
@@ -6549,7 +6535,7 @@
               "node_id": "model",
               "type": "LLM",
               "status": "completed",
-              "provider_latency_ms": 0.004
+              "provider_latency_ms": 0.005
             },
             {
               "node_id": "review",
@@ -6623,13 +6609,13 @@
       {
         "id": "human-rejection",
         "title": "技术规则通过仍可被否决",
-        "run_id": "run_f83bce4f6414",
+        "run_id": "run_9b0a4c6bc995",
         "before_status": "pending_approval",
         "after_status": "rejected",
         "human_review": {
           "approved": false,
           "note": "Scripted rejection; relevance not established",
-          "reviewed_at": "2026-09-10T09:53:12.793261+00:00",
+          "reviewed_at": "2026-09-10T10:00:25.616538+00:00",
           "reviewer": "local-owner"
         }
       },

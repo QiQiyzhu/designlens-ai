@@ -73,4 +73,6 @@ AI-assisted 实现与研究方案；本人必须读懂和实际执行后才能�
 
 ## 本轮验证记录
 
-2026-09-10 本机：完整后端 **44 passed，0 skipped**；[JUnit 原始记录](../reports/decision-case-tests.xml)。48 条确定性工作流/提取与 HTTP 边界脚本真实执行通过。保留两个已有依赖弃用警告；本轮没有重跑本机浏览器。历史 A–T 手册的 43 指新增测试之前的冻结结果。本轮 Linux CI 待推送执行，不能把旧版成功链接当作本轮验收。
+2026-09-10 本机：完整后端 **44 passed，0 skipped**；[JUnit 原始记录](../reports/decision-case-tests.xml)。48 条确定性工作流/提取与 HTTP 边界脚本真实执行通过。保留两个已有依赖弃用警告；本轮没有重跑本机浏览器。历史 A–T 手册的 43 指新增测试之前的冻结结果。
+
+本轮首次功能提交 `29d007bf639d281894131daeeddb11f515b1de96` 的 [Linux CI 34463711921](https://github.com/QiQiyzhu/designlens-ai/actions/runs/34463711921) 已成功：44 后端、6 浏览器及新增决策边界导出实际执行。[下载的原始记录](qa/decision-case-ci/README.md)绑定这个精确 source SHA；后续文档与跨平台哈希说明不改写历史结果。README 顶部工作流徽章查看分支最新 CI。

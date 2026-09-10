@@ -77,7 +77,9 @@ def build_export(boundary):
     selected = {"citation": "能看见文字，不等于存在合格引用", "irrelevant": "原文引用成立，相关性仍失败", "empty": "没有证据，停止在模型之前", "counterexample": "保留不同意见，不能自行宣布优先级", "no-ai": "标签规则仍是可选方案", "metadata-not-outcome": "招募计划不是已完成访谈"}
     return {"schema_version": 1, "project": "designlens", "title": "证据不够时，停止决策而不是补写结论",
             "provenance": {"source_head_before_change": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(), "data": "DEMO/SYNTHETIC, 12 development cases × 4 variants", "provider": "extractive / deterministic-extractor; no LLM calls", "human_review": "Scripted QA only; PENDING REAL USER RESEARCH; real participants=0"},
-            "sources": [{"path": p, "sha256": hashlib.sha256((ROOT / p).read_bytes()).hexdigest()} for p in paths],
+            "sources": [{"path": p, "sha256": hashlib.sha256((ROOT / p).read_bytes().replace(b"\r\n", b"\n")).hexdigest(),
+                         "sha256_scope": "UTF-8 source text, CRLF normalized to LF for GitHub/fresh-clone comparison",
+                         "working_tree_sha256": hashlib.sha256((ROOT / p).read_bytes()).hexdigest()} for p in paths],
             "summary": {"historical_executed_at": original["created_at"], "dataset_sha256": original["dataset_sha256"], "executions": len(original["results"]), "variants": original["comparison"], "human_ratings": None},
             "cases": [{"case_id": cid, "title": title, "input": next(c for c in dataset["cases"] if c["case_id"] == cid), "variants": [r for r in original["results"] if r["case_id"] == cid]} for cid, title in selected.items()],
             "all_cases": original["results"], "boundary_execution": boundary,
